@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>課程列表</title>
+</head>
+<body>
+  <h1>課程列表</h1>
+  <ul id="course-list"></ul>
+
+  <script>
+    fetch('/api/courses')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('course-list');
+        data.forEach(course => {
+          const li = document.createElement('li');
+          li.textContent = `${course.id} - ${course.name}（${course.teacher}）`;
+          list.appendChild(li);
+        });
+      })
+      .catch(err => console.error('載入課程資料失敗:', err));
+  </script>
+</body>
+</html>
