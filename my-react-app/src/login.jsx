@@ -113,7 +113,7 @@ function Login({ onLogin }) {
         />
         <input
           type="password"
-          placeholder="密碼"
+          placeholder="請輸入密碼"
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
