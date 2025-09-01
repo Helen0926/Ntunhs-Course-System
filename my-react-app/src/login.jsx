@@ -19,7 +19,8 @@ function Login({ onLogin }) {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        onLogin(username);
+        // 修改：將使用者名稱和角色一起傳遞給父組件
+        onLogin(username, data.role);
       } else {
         setError(data.message || '帳號或密碼錯誤，請再試一次。');
       }
@@ -66,6 +67,14 @@ function Login({ onLogin }) {
     WebkitTextFillColor: 'transparent',
   };
 
+  const subtitleStyle = {
+    textAlign: 'center',
+    marginBottom: '20px',
+    fontSize: '0.9rem',
+    color: '#6b7280',
+    lineHeight: '1.5',
+  };
+
   const errorStyle = {
     color: '#ef4444',
     backgroundColor: '#fee2e2',
@@ -102,14 +111,20 @@ function Login({ onLogin }) {
     <div style={pageContainerStyle}>
       <form onSubmit={handleSubmit} style={formCardStyle}>
         <h2 style={titleStyle}>北護課程查詢登入系統</h2>
+        <p style={subtitleStyle}>
+          請使用您的帳號密碼登入系統<br/>
+          <small>學生可查詢課程，管理者可進行課程管理</small>
+        </p>
+        
         {error && <p style={errorStyle}>{error}</p>}
+        
         <input
           type="text"
           placeholder="請輸入帳號"
           value={username}
           onChange={e => setUsername(e.target.value)}
           required
-          className="login-input" // 使用 class
+          className="login-input"
         />
         <input
           type="password"
@@ -117,7 +132,7 @@ function Login({ onLogin }) {
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
-          className="login-input" // 使用 class
+          className="login-input"
         />
         <button
           type="submit"
@@ -135,23 +150,21 @@ function Login({ onLogin }) {
           .login-input {
             padding: 14px 16px;
             border-radius: 8px;
-            /* 使用 inset box-shadow 模擬邊框，而不是實體 border */
             box-shadow: inset 0 0 0 1px #d1d5db; 
             font-size: 1rem;
             outline: none;
             transition: box-shadow 0.2s ease-in-out; 
             color: #333;
             box-sizing: border-box;
-            border: none; /* 移除實體 border */
+            border: none;
           }
 
           .login-input:focus {
-            /* 聚焦時，組合 inset 邊框和外層光暈 */
             box-shadow: inset 0 0 0 1px #60a5fa, 0 0 0 3px rgba(96, 165, 250, 0.3);
           }
 
           .login-input::placeholder {
-            color: #9ca3af; /* 調整 placeholder 顏色，使其更清晰 */
+            color: #9ca3af;
           }
         `}
       </style>

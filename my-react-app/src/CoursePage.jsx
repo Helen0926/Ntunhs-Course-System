@@ -25,14 +25,14 @@ const departmentMap = {
   '42140':'智慧健康科技技優專班'
 };
 
-const App = () => {
+const CoursePage = () => {
   const [semester, setSemester] = useState('');
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [keyword, setKeyword] = useState('');
   const [semesters, setSemesters] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [courses, setCourses] = useState([]);
-  const [grade, setGrade] = useState([]); // 變更：年級現在是陣列，用於多選
+  const [grade, setGrade] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -61,7 +61,6 @@ const App = () => {
   };
 
   const handleGradeChange = (e) => {
-    // 變更：處理多選核取方塊的邏輯
     const value = e.target.value;
     setGrade(prev =>
       prev.includes(value) ? prev.filter(g => g !== value) : [...prev, value]
@@ -86,7 +85,7 @@ const App = () => {
       const query = new URLSearchParams({
         semester,
         department: selectedDepartments.join(','),
-        grade: grade.join(','), // 變更：將年級陣列轉換為逗號分隔字串
+        grade: grade.join(','),
         keyword,
       }).toString();
 
@@ -101,7 +100,7 @@ const App = () => {
     }
   };
 
-  // --- 樣式定義 (內聯樣式) ---
+  // --- 樣式定義 ---
   const containerStyle = {
     backgroundColor: '#f0f4f8',
     minHeight: '100vh',
@@ -304,7 +303,6 @@ const App = () => {
       <div style={mainContentWrapperStyle}>
         {/* 標題區塊 */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
-          {/* 校徽圖片 */}
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/National_Taipei_University_of_Nursing_and_Health_Science_logo.jpg/330px-National_Taipei_University_of_Nursing_and_Health_Science_logo.jpg"
             alt="國立臺北護理健康大學校徽"
@@ -375,12 +373,12 @@ const App = () => {
             </div>
           </div>
 
-          {/* 年級選擇 (改為多選核取方塊) */}
+          {/* 年級選擇 */}
           <div style={filterGroupStyle}>
             <div style={sectionTitleStyle}>
               <GraduationCap size={20} color="#8b5cf6" />
               <span>年級選擇</span>
-              {grade.length > 0 && ( // 檢查 grade 陣列長度
+              {grade.length > 0 && (
                 <span style={{ backgroundColor: '#ede9fe', color: '#7c3aed', padding: '4px 10px', borderRadius: '15px', fontSize: '0.8rem', fontWeight: '600' }}>
                   已選 {grade.join(', ')} 年級
                 </span>
@@ -394,7 +392,7 @@ const App = () => {
                 >
                   <input
                     type="checkbox"
-                    value={String(g)} // 確保值為字串，與 state 類型一致
+                    value={String(g)}
                     checked={grade.includes(String(g))}
                     onChange={handleGradeChange}
                     style={checkboxInputStyle}
@@ -529,4 +527,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default CoursePage;
