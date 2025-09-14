@@ -29,7 +29,7 @@ const departmentMap = {
 };
 
 const AdminPage = () => {
-  const [activeTab, setActiveTab] = useState('view'); // 'view' | 'manage'
+  const [activeTab, setActiveTab] = useState('view');
   const [semester, setSemester] = useState('');
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [keyword, setKeyword] = useState('');
@@ -46,13 +46,7 @@ const AdminPage = () => {
     科目中文名稱: '',
     學分數: '',
     主開課教師姓名: '',
-    課別名稱: '',
-    年級: '',
-    上課地點: '',
-    上課星期: '',
-    上課節次: '',
-    學期: '',
-    系所代碼: ''
+    課別名稱: ''
   });
 
   useEffect(() => {
@@ -123,12 +117,17 @@ const AdminPage = () => {
 
   // 新增課程
   const handleAddCourse = async () => {
+    if (!newCourse.科目中文名稱 || !newCourse.主開課教師姓名) {
+      alert('請填寫必要欄位：課程名稱和教師姓名');
+      return;
+    }
+
     try {
       const res = await fetch('http://192.168.66.27:8000/api/admin/courses', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'X-User-Role': 'admin' // 加入管理者權限標頭
+          'X-User-Role': 'admin'
         },
         body: JSON.stringify({
           name: newCourse.科目中文名稱,
@@ -146,15 +145,9 @@ const AdminPage = () => {
           科目中文名稱: '',
           學分數: '',
           主開課教師姓名: '',
-          課別名稱: '',
-          年級: '',
-          上課地點: '',
-          上課星期: '',
-          上課節次: '',
-          學期: '',
-          系所代碼: ''
+          課別名稱: ''
         });
-        fetchCourses(); // 重新載入課程清單
+        fetchCourses();
       } else {
         alert(data.message || '新增失敗');
       }
@@ -166,6 +159,11 @@ const AdminPage = () => {
 
   // 修改課程
   const handleUpdateCourse = async (courseId) => {
+    if (!editingCourse.科目中文名稱 || !editingCourse.主開課教師姓名) {
+      alert('請填寫必要欄位：課程名稱和教師姓名');
+      return;
+    }
+
     try {
       const res = await fetch(`http://192.168.66.27:8000/api/admin/courses/${courseId}`, {
         method: 'PUT',
@@ -197,7 +195,7 @@ const AdminPage = () => {
 
   // 刪除課程
   const handleDeleteCourse = async (courseId, courseName) => {
-    if (!confirm(`確定要刪除課程「${courseName}」嗎？此操作無法復原。`)) {
+    if (!window.confirm(`確定要刪除課程「${courseName}」嗎？此操作無法復原。`)) {
       return;
     }
 
@@ -223,7 +221,7 @@ const AdminPage = () => {
     }
   };
 
-  // --- 樣式定義 ---
+  // 樣式定義
   const containerStyle = {
     backgroundColor: '#f0f4f8',
     minHeight: '100vh',
@@ -323,6 +321,7 @@ const AdminPage = () => {
     fontSize: '0.9rem',
     outline: 'none',
     transition: 'border-color 0.2s, box-shadow 0.2s',
+    boxSizing: 'border-box',
   };
 
   const buttonStyle = {
@@ -399,6 +398,7 @@ const AdminPage = () => {
     boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
   };
 
+  // 查詢課程分頁
   const ViewCoursesTab = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
       {/* 篩選欄區塊 */}
@@ -409,11 +409,7 @@ const AdminPage = () => {
             <Calendar size={20} color="#3b82f6" />
             <span>學期選擇</span>
           </div>
-          <select
-            value={semester}
-            onChange={e => setSemester(e.target.value)}
-            style={selectStyle}
-          >
+          <select value={semester} onChange={e => setSemester(e.target.value)} style={selectStyle}>
             <option value="">請選擇學期</option>
             {semesters.map((s, i) => (
               <option key={i} value={s}>{formatSemesterDisplay(s)}</option>
@@ -441,7 +437,6 @@ const AdminPage = () => {
                 backgroundColor: '#e6f0fa',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                transition: 'background-color 0.2s',
                 fontSize: '0.95rem',
                 color: '#333',
                 border: '1px solid #cce0f0',
@@ -498,29 +493,37 @@ const AdminPage = () => {
 
         {/* 關鍵字搜尋與搜尋按鈕 */}
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-          <div style={{ flexGrow: 1, minWidth: '250px', position: 'relative' }}>
+          <div style={{ flexGrow: 1, minWidth: '250px' }}>
             <div style={sectionTitleStyle}>
               <Search size={20} color="#f59e0b" />
               <span>關鍵字搜尋</span>
             </div>
-            <input
-              type="text"
-              placeholder="輸入課程名稱或教師姓名..."
-              value={keyword}
-              onChange={e => setKeyword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '12px 15px 12px 45px',
-                border: '1px solid #cce0f0',
-                borderRadius: '8px',
-                backgroundColor: '#fff',
-                fontSize: '1rem',
-                color: '#333',
-                transition: 'border-color 0.2s, box-shadow 0.2s',
-                boxSizing: 'border-box',
-              }}
-            />
-            <Search size={20} color="#9ca3af" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'relative' }}>
+              <input
+                type="text"
+                placeholder="輸入課程名稱或教師姓名..."
+                value={keyword}
+                onChange={e => setKeyword(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '12px 15px 12px 45px',
+                  border: '1px solid #cce0f0',
+                  borderRadius: '8px',
+                  backgroundColor: '#fff',
+                  fontSize: '1rem',
+                  color: '#333',
+                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                  boxSizing: 'border-box',
+                }}
+              />
+              <Search size={20} color="#9ca3af" style={{ 
+                position: 'absolute', 
+                left: '15px', 
+                top: '50%', 
+                transform: 'translateY(-50%)', 
+                pointerEvents: 'none' 
+              }} />
+            </div>
           </div>
           <button
             onClick={fetchCourses}
@@ -621,13 +624,11 @@ const AdminPage = () => {
     </div>
   );
 
+  // 管理課程分頁
   const ManageCoursesTab = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
       {/* 新增課程按鈕 */}
-      <button
-        onClick={() => setIsAddingCourse(true)}
-        style={addButtonStyle}
-      >
+      <button onClick={() => setIsAddingCourse(true)} style={addButtonStyle}>
         <Plus size={20} />
         新增課程
       </button>
@@ -681,7 +682,7 @@ const AdminPage = () => {
                           style={inputStyle}
                         />
                       </td>
-                      <td style={{ padding: '12px 10px' }}>{course['學分數']}</td>
+                      <td style={{ padding: '12px 10px', fontSize: '0.9rem' }}>{course['學分數']}</td>
                       <td style={{ padding: '12px 10px' }}>
                         <div style={{ display: 'flex', gap: '5px' }}>
                           <button
@@ -883,32 +884,5 @@ const AdminPage = () => {
     </div>
   );
 };
-// 刪除課程
-  const handleDeleteCourse = async (courseId, courseName) => {
-    if (!window.confirm(`確定要刪除課程「${courseName}」嗎？此操作無法復原。`)) {
-      return;
-    }
 
-    try {
-      const res = await fetch(`http://192.168.66.27:8000/api/admin/courses/${courseId}`, {
-        method: 'DELETE',
-        headers: { 
-          'X-User-Role': 'admin'
-        }
-      });
-
-      const data = await res.json();
-      
-      if (res.ok && data.success) {
-        alert('課程刪除成功！');
-        fetchCourses();
-      } else {
-        alert(data.message || '刪除失敗');
-      }
-    } catch (err) {
-      console.error('Delete course error:', err);
-      alert('刪除失敗，請稍後再試');
-    }
-  };
-  
 export default AdminPage;

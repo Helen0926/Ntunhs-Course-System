@@ -197,6 +197,11 @@ app.delete('/api/admin/courses/:id', authorizeAdmin, async (req, res) => {
 
 // ====================================================
 // ===== 啟動伺服器 =====
-app.listen(8000, '192.168.66.27', () => {
+// app.listen(8000, '192.168.66.27', () => {
+//     console.log('後端伺服器啟動於 http://192.168.66.27:8000');
+// });
+
+app.listen(8000, () => {
     console.log('後端伺服器啟動於 http://192.168.66.27:8000');
+    console.log(`後端伺服器啟動於 http://localhost:8000`);
 });

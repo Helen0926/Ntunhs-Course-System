@@ -114,7 +114,7 @@ const CoursePage = () => {
   };
 
   const mainContentWrapperStyle = {
-    maxWidth: '1200px',
+    maxWidth: '1400px', // 從 1200px 調整為 1400px，與 AdminPage 一致
     width: '100%',
     backgroundColor: '#fff',
     padding: '30px 40px',
@@ -403,51 +403,63 @@ const CoursePage = () => {
             </div>
           </div>
 
-          {/* 關鍵字搜尋與搜尋按鈕 */}
-          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-            <div style={{ flexGrow: 1, minWidth: '250px', position: 'relative' }}>
-              <div style={sectionTitleStyle}>
-                <Search size={20} color="#f59e0b" />
-                <span>關鍵字搜尋</span>
-              </div>
-              <input
-                type="text"
-                placeholder="輸入課程名稱或教師姓名..."
-                value={keyword}
-                onChange={e => setKeyword(e.target.value)}
-                style={keywordInputStyle}
-                onFocus={(e) => Object.assign(e.target.style, selectFocusHoverStyle)}
-                onBlur={(e) => Object.assign(e.target.style, keywordInputStyle)}
-                onMouseEnter={(e) => Object.assign(e.target.style, selectFocusHoverStyle)}
-                onMouseLeave={(e) => Object.assign(e.target.style, keywordInputStyle)}
-              />
-              <Search size={20} color="#9ca3af" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-            </div>
-            <button
-              onClick={fetchCourses}
-              disabled={isLoading}
-              style={isLoading ? buttonDisabledStyle : buttonStyle}
-              onMouseEnter={(e) => { if (!isLoading) Object.assign(e.currentTarget.style, buttonHoverStyle); }}
-              onMouseLeave={(e) => { if (!isLoading) Object.assign(e.currentTarget.style, buttonStyle); }}
-            >
-              {isLoading ? (
-                <>
-                  <div style={{
-                    width: '20px', height: '20px', border: '2px solid #ffffff', borderTop: '2px solid transparent',
-                    borderRadius: '50%', animation: 'spin 1s linear infinite'
-                  }}></div>
-                  搜尋中...
-                </>
-              ) : (
-                <>
-                  <Search size={20} />
-                  搜尋
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
+           {/* 關鍵字搜尋與搜尋按鈕 */}
+                  <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                    <div style={{ flexGrow: 1, minWidth: '250px' }}>
+                      <div style={sectionTitleStyle}>
+                        <Search size={20} color="#f59e0b" />
+                        <span>關鍵字搜尋</span>
+                      </div>
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          type="text"
+                          placeholder="輸入課程名稱或教師姓名..."
+                          value={keyword}
+                          onChange={e => setKeyword(e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '12px 15px 12px 45px',
+                            border: '1px solid #cce0f0',
+                            borderRadius: '8px',
+                            backgroundColor: '#fff',
+                            fontSize: '1rem',
+                            color: '#333',
+                            transition: 'border-color 0.2s, box-shadow 0.2s',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                        <Search size={20} color="#9ca3af" style={{ 
+                          position: 'absolute', 
+                          left: '15px', 
+                          top: '50%', 
+                          transform: 'translateY(-50%)', 
+                          pointerEvents: 'none' 
+                        }} />
+                      </div>
+                    </div>
+                    <button
+                      onClick={fetchCourses}
+                      disabled={isLoading}
+                      style={isLoading ? { ...buttonStyle, opacity: 0.6, cursor: 'not-allowed' } : buttonStyle}
+                    >
+                      {isLoading ? (
+                        <>
+                          <div style={{
+                            width: '20px', height: '20px', border: '2px solid #ffffff', borderTop: '2px solid transparent',
+                            borderRadius: '50%', animation: 'spin 1s linear infinite'
+                          }}></div>
+                          搜尋中...
+                        </>
+                      ) : (
+                        <>
+                          <Search size={20} />
+                          搜尋
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+                
         {/* 搜尋結果表格區塊 */}
         <div style={tableContainerStyle}>
           <table style={tableStyle}>
